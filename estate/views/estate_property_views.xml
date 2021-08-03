@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-	<record model='ir.ui.view' id='estate_property_tree'>
+	<record model='ir.ui.view' id='estate_property_tree'> <!--por cada vista es un record-->
 	    <field name='name'>estate_property.tree</field> <!--nombre tecnico-->
 	    <field name='model'>estate.property</field>   <!--nombre funcional-->
-	    <field name='arch' type='xml'>   			<!--campo arch de tipo XML -->
-	        <tree>
+	    <field name='arch' type='xml'>   			<!--campo arch de tipo XML definicion de la vista -->
+	        <tree> <!--tree vista de arbol, form vista de formulario-->
 	            <field name='name' string="Title"/>		<!--Los campos existentes que estan en el modelo -->
-	            <field name='postcode' string="Post Code"/>
+	            <field name='postcode' string="Post Code"/> <!--Cuando se actualiza  el campo desde el Odoo, no se guarda en este archivo los cambios y cuando se actualice el server se van a perder los campos ya que toma este archivo como base -->
 	            <field name='bedroms' string="Bedrooms"/>
 	            <field name='living_area' string="Living Area"/>
 	            <field name='expected_price' string="Expected Price"/>
@@ -15,8 +15,75 @@
 	        </tree>
 	    </field>
 	</record>
+	<record model='ir.ui.view' id='estate_property_form'> <!--por cada vista es un record-->
+	    <field name='name'>estate_property.tree</field> <!--nombre tecnico-->
+	    <field name='model'>estate.property</field>   <!--nombre funcional-->
+	    <field name='arch' type='xml'>   			<!--campo arch de tipo XML definicion de la vista -->
+	        <form> <!--tree vista de arbol, form vista de formulario-->
+	          <sheet><!--Diseño de la hojita-->
+	          	<group> <!--ordenar a lo ancho de la pagina -->		<!-- -->
+		          		<h1><field name="name"/></h1>
+		          	</group>
+	          	<group>
+		          	<group>
+		          		<field name="postcode"/>
+	          			<field name="date_availability"/>
+		          	</group>
+		          	<group>
+		          		<field name="expected_price"/>
+	          			<field name="Selling_price"/>
+		          	</group>
+	          	</group>
+	          	 <notebook>	<!-- Diseño de pestaña-->
+	                <page string="Description"> <!--Pestaña-->
+	                	<group>
+	                		<group>
+		                    <field name="description"/>
+		                    <field name='bedroms'/>
+		            		<field name="living_area"/>
+		            		<field name="facades"/>
+		            		
+	            		</group>
+	            		<group>
+	            			<field name="garage"/>
+		            		<field name="garden"/>
+		            		<field name="garden_area"/>
+		            		<field name="garden_orientation"/>
+	            		</group>
+	                	</group>
+	                	
+	                </page>
+	                <page string="Test Tab">
+	                	<h1>Hellow World!</h1>
+	                </page>
+            	</notebook>
+            	<notebook>
+            		<page string="Test Tab"/>
+            	</notebook>
+	          
+	          </sheet>
+	        </form>
+	    </field>
+	</record>
+	<record model='ir.ui.view' id='estate_property_search'> <!--por cada vista es un record-->
+	    <field name='name'>estate_property.search</field> <!--nombre tecnico-->
+	    <field name='model'>estate.property</field>   <!--nombre funcional-->
+	    <field name='arch' type='xml'>   			<!--campo arch de tipo XML definicion de la vista -->
+	        <search> <!--tree vista de arbol, form vista de formulario, search vista de busqueda-->
+	           	<field name="name"/>
+	           	<field name="postcode"/>
+           		<field name="expected_price"/>
+           		<field name="bedroms"/>
+       			<field name="living_area"/>
+       			<field name="facades"/>
+       			<filter name="available" string="Available" domain="[('state','in',['new','offer_received'])]"/>
+       			<!-- para agregar un filtro es necesario poner la etiqueta Filter-->
+       			<filter name="group_by_postcode" string="Postcode" context="{'group_by':'postcode'}"/>
+	        </search>
+	    </field>
+	</record>
 	<record id="estate_property_action" model="ir.actions.act_window">
-	    <field name="name">Estate Property action</field>
+	    <field name="name">Estate Property Action</field> <!--nombre que tiene la vista al inicio-->
 	    <field name="res_model">estate.property</field> 
 	    <field name="view_mode">tree,form</field>
 	</record>
