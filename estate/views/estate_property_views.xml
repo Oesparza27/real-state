@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+	<record model='ir.ui.view' id='estate_property_tree'>
+	    <field name='name'>estate_property.tree</field> <!--nombre tecnico-->
+	    <field name='model'>estate.property</field>   <!--nombre funcional-->
+	    <field name='arch' type='xml'>   			<!--campo arch de tipo XML -->
+	        <tree>
+	            <field name='name' string="Title"/>		<!--Los campos existentes que estan en el modelo -->
+	            <field name='postcode' string="Post Code"/>
+	            <field name='bedroms' string="Bedrooms"/>
+	            <field name='living_area' string="Living Area"/>
+	            <field name='expected_price' string="Expected Price"/>
+	            <field name='Selling_price' string="Selling Price"/>
+	            <field name='date_availability' string="Available From"/>
+	        </tree>
+	    </field>
+	</record>
 	<record id="estate_property_action" model="ir.actions.act_window">
 	    <field name="name">Estate Property action</field>
 	    <field name="res_model">estate.property</field> 
