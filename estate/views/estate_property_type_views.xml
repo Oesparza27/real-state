@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<record model='ir.ui.view' id='estate_property_type_tree'> <!--por cada vista es un record-->
+	    <field name='name'>estate_property_type.tree</field> <!--nombre tecnico-->
+	    <field name='model'>estate.property.type</field>   <!--nombre funcional-->
+	    <field name='arch' type='xml'>   			<!--campo arch de tipo XML definicion de la vista -->
+	        <tree editable="top"> <!--tree vista de arbol, form vista de formulario el atributo top es para que la vista inicie desde arriba-->
+	            <field name='name'/>		<!--Los campos existentes que estan en el modelo -->
+	        </tree>
+	    </field>
+	</record>
+	<record id='action_estate_property_type' model='ir.actions.act_window'> <!--por cada vista es un record-->
+	    <field name='name'>Property Types</field> <!--nombre tecnico-->
+	    <field name='res_model'>estate.property.type</field>   <!--nombre funcional-->
+	    <field name='view_mode'>tree</field>   <!--no se necesita la vista de form por eso no lo lleva-->			<!--campo arch de tipo XML definicion de la vista -->
+	</record>
+	<menuitem id="settings_menu" name="Settings" parent="estate_menu_root"/>
+	<menuitem id="estate_property_type_menu" name="Property Types" parent="settings_menu" action="action_estate_property_type"/>
+</odoo>

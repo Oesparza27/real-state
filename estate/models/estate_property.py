@@ -55,4 +55,31 @@ class EstateProperty(models.Model):
         ],
         default='new',
         copy=False,
-    )       
+    )     
+
+    # Many2One de muchos a uno por ejemplo un vendedor o un comprador a los 
+    # registros dados de alta
+    property_type_id = fields.Many2one(
+        comodel_name='estate.property.type',
+        )
+    # campos relacional por estandar siempre termina en _id
+    buyer_id = fields.Many2one(
+        comodel_name='res.partner',
+        string='Buyer',
+        copy=False,
+        )
+    # Res.partner es el modelo generico que usa Odoo siempre sera asi. Clientes 
+    # o Partner que no pertenezcan al sistema usu usuario cuando se crea en 
+    # automatico se debe de crear una partner 
+    seller_id = fields.Many2one(
+        comodel_name='res.users',
+        default=lambda self: self.env.user,
+        string='Vendedor o Salesman',
+        )
+    # res.users es esl vendedor que es el usuario del sistema
+    # self.env.user son las variables de entorno que tiene el sistema fecha, 
+    # usuarios etc.
+    tag_ids = fields.Many2many(
+        comodel_name='estate.property.tag',
+        string="Tags",
+        )
