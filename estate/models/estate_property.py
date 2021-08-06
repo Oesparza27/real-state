@@ -2,7 +2,9 @@
 # License LGPL-3.0 or later (http:.gnu.org/licenses/lgpt.html)
 
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 # se importa fields desde la carpeta odoo fields.py y models.py
+# importar los mensage de error directamente desde la carpeta de Odoo
 
 
 class EstateProperty(models.Model):
@@ -109,10 +111,7 @@ class EstateProperty(models.Model):
     )
     validity = fields.Integer(
         default=7,
-    )
-
-    
-
+    )  
 
     """metodo que empieza con guion bajo es un metodo privado, que nos e puede 
     ejecutar desde el frontend.
@@ -144,8 +143,9 @@ class EstateProperty(models.Model):
     @api.depends('validity', 'create_date')
     def _compute_date_deadline(self):
         for rec in self:
+            create_date = rec.create_date or fields.Date.context_today(rec)
             rec.date_deadline = fields.Date.add(
-                rec.create_date, days=+rec.validity
+                create_date, days=+rec.validity
             )
 
     def _inverse_date_deadline(self):
@@ -174,6 +174,22 @@ class EstateProperty(models.Model):
     # el metodo update solo actualiza en la BD y el metodo Write escribe en 
     # la BD
 
+    def action_sold(self):
+        for rec in self:
+            if rec.state == 'canceled':
+                raise UserError('No puedes vender una propiedad cancelada')
+            rec.state = 'sold'
+
+    def action_canceled(self):
+        for rec in self:
+            if rec.state == 'sold':
+                raise UserError('No puedes cancelar una propiedad vendida')
+            rec.state = 'canceled'
+            # para un mensaje en un boton solamente es necesario usar un raise }
+            # porque los warning se ejecutan en frontend
+
+    
+
 
 class EstatePropertyOffer(models.Model):
     _name = "estate.property.offer"    # nombre tecnico
@@ -194,3 +210,17 @@ class EstatePropertyOffer(models.Model):
         comodel_name='estate.property',
         required=True,
     )
+
+    def action_accept(self):
+        for rec in self:
+            if any([x == 'accepted' for x in rec.property_id.offer_ids.mapped('status')]):
+                raise UserError('Solo puedes aceptar una oferta')
+            rec.property_id.write({
+                'buyer_id': rec.partner_id.id,
+                'Selling_price': rec.price,
+                })      
+            rec.status = 'accepted'
+
+    def action_refused(self):
+        for rec in self:
+            rec.status = 'refused'

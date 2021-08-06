@@ -20,6 +20,24 @@
 	    <field name='model'>estate.property</field>   <!--nombre funcional-->
 	    <field name='arch' type='xml'>   			<!--campo arch de tipo XML definicion de la vista -->
 	        <form> <!--tree vista de arbol, form vista de formulario-->
+	        	<header>
+	        		<button name="action_sold" 
+	        			states="new,offer_received,offer_accepted,canceled" 
+	        			string="Sold" 
+	        			type="object" 
+	        			class="oe_highlight"/> 
+	        			<button name="action_canceled" 
+	        			states="new,offer_received,offer_accepted,sold" 
+	        			string="cancel" 
+	        			type="object" 
+	        			icon="fa-window-close"/> 
+	        			<!--para mandar a llamar un boton debe de ser publico sin guion bajo al inicio, name: es el nombre del metodo que se va a llamar,
+						state: son los estados en los que se va a mostrar o usar,
+	        			string es el nombre del boton, 
+	        			type: Object llama un metodo, action: manda a llamar una accion
+	        			icon: permite definir un icono al boton y se pueden leer desde  fontawesome "fa-accesible " -->
+	        			<field name="state" widget="statusbar" statusbar_visible="new,offer_received,offer_accepted,sold"/>
+	    		</header>
 	          <sheet><!--Diseño de la hojita-->
 	          	
 		          		<h1><field name="name"/></h1>
@@ -68,11 +86,12 @@
 	                			<field name="price"/>
 	                			<field name="partner_id"/>
 	                			<field name="status"/>
-
+            					<button name="action_accept" string="Aceptar" type="object" icon="fa-thumbs-up"/>
+            					<button name="action_refused" string="Rechazar" type="object" icon="fa-window-close"/>
+								<!--git diff-->
 	                		</tree>
 	                	</field>
 	                </page>
-
 	                <page string="Test Tab">
 	                	<h1>Hello World!</h1>
 	                </page>
