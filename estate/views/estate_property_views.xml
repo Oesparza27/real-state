@@ -1,130 +1,161 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-	<record model='ir.ui.view' id='estate_property_tree'> <!--por cada vista es un record-->
-	    <field name='name'>estate_property.tree</field> <!--nombre tecnico-->
-	    <field name='model'>estate.property</field>   <!--nombre funcional-->
-	    <field name='arch' type='xml'>   			<!--campo arch de tipo XML definicion de la vista -->
-	        <tree> <!--tree vista de arbol, form vista de formulario-->
-	            <field name='name' string="Title"/>		<!--Los campos existentes que estan en el modelo -->
-	            <field name='postcode' string="Post Code"/> <!--Cuando se actualiza  el campo desde el Odoo, no se guarda en este archivo los cambios y cuando se actualice el server se van a perder los campos ya que toma este archivo como base -->
-	            <field name='bedroms' string="Bedrooms"/>
-	            <field name='living_area' string="Living Area"/>
-	            <field name='expected_price' string="Expected Price"/>
-	            <field name='Selling_price' string="Selling Price"/>
-	            <field name='date_availability' string="Available From"/>
+	<record model='ir.ui.view' id='estate_property_tree'>
+	    <field name='name'>estate_property.tree</field>
+	    <field name='model'>estate.property</field>
+	    <field name='arch' type='xml'>
+	        <tree string='description'>
+	            <field name='name' string = 'Title' />
+	            <field name='postcode' string = 'Postcode'/>
+	            <field name='bedroms' string = 'Bedroms'/>
+	            <field name='living_area' string = 'Living Area (sqm)'/>
+	            <field name='expected_price'/>
+	            <field name='selling_price'/>
+	            <field name='date_availability' string = 'Avalible'/>
+	            <field name='description'/>
+				<field name='bedroms'/>
+				<field name='living_area'/>
+				<field name='garden' string ="Garden" />
+				<field name='facades'/>
+				<field name='garage'/>
+				<field name = "total_area"/>
 	        </tree>
 	    </field>
 	</record>
-	<record model='ir.ui.view' id='estate_property_form'> <!--por cada vista es un record-->
-	    <field name='name'>estate_property.tree</field> <!--nombre tecnico-->
-	    <field name='model'>estate.property</field>   <!--nombre funcional-->
-	    <field name='arch' type='xml'>   			<!--campo arch de tipo XML definicion de la vista -->
-	        <form> <!--tree vista de arbol, form vista de formulario-->
-	        	<header>
-	        		<button name="action_sold" 
-	        			states="new,offer_received,offer_accepted,canceled" 
-	        			string="Sold" 
-	        			type="object" 
-	        			class="oe_highlight"/> 
-	        			<button name="action_canceled" 
-	        			states="new,offer_received,offer_accepted,sold" 
-	        			string="cancel" 
-	        			type="object" 
-	        			icon="fa-window-close"/> 
-	        			<!--para mandar a llamar un boton debe de ser publico sin guion bajo al inicio, name: es el nombre del metodo que se va a llamar,
-						state: son los estados en los que se va a mostrar o usar,
-	        			string es el nombre del boton, 
-	        			type: Object llama un metodo, action: manda a llamar una accion
-	        			icon: permite definir un icono al boton y se pueden leer desde  fontawesome "fa-accesible " -->
-	        			<field name="state" widget="statusbar" statusbar_visible="new,offer_received,offer_accepted,sold"/>
-	    		</header>
-	          <sheet><!--Diseño de la hojita-->
-	          	
-		          		<h1><field name="name"/></h1>
-		          		<field name="tag_ids" nolabel="1" widget="many2many_tags" placeholder="Tags..."/>
-	          	<group>
-		          	<group>
-		          		<field name="property_type_id"/>
-		          		<field name="postcode"/>
-	          			<field name="date_availability"/>
-		          	</group>
-		          	<group>
-		          		<field name="expected_price"/>
-	          			<field name="Selling_price"/>
-	          			<field name="best_price"/>
-		          	</group>
-	          	</group>
-	          	 <notebook>	<!-- Diseño de pestaña-->
-	                <page string="Description"> <!--Pestaña-->
-	                	<group>
-	                		<group>
-			                    <field name="description"/>
-			                    <field name='bedroms'/>
-			            		<field name="living_area"/>
-			            		<field name="facades"/>
-		            		</group>
-		            		<group>
-		            			<field name="garage"/>
-			            		<field name="garden"/>
-			            		<field name="garden_area"/>
-			            		<field name="garden_orientation"/>
-			            		<field name="total_area"/>
-			            		<field name="date_deadline"/>
-	                			<field name="validity"/>
-		            		</group>
-	                	</group>
-	                </page>
-	                <page string="Other Info">
-	                	<group>
-	                		<field name="seller_id"/>
-	                		<field name="buyer_id"/>
-	                	</group>
-	                </page>
-	                <page string="Offers">
-	                	<field name="offer_ids" nolabel="1">
-	                		<tree editable="bottom">
-	                			<field name="price"/>
-	                			<field name="partner_id"/>
-	                			<field name="status"/>
-            					<button name="action_accept" string="Aceptar" type="object" icon="fa-thumbs-up"/>
-            					<button name="action_refused" string="Rechazar" type="object" icon="fa-window-close"/>
-								<!--git diff-->
-	                		</tree>
-	                	</field>
-	                </page>
-	                <page string="Test Tab">
-	                	<h1>Hello World!</h1>
-	                </page>
-            	</notebook>
-            	<notebook>
-            		<page string="Test Tab"/>
-            	</notebook>
-	          
-	          </sheet>
-	        </form>
+	<record model='ir.ui.view' id='estate_property_form'>
+	    <field name='name'>estate_property.form</field>
+	    <field name='model'>estate.property</field>
+	    <field name='arch' type='xml'>
+	       <form>
+	       		<header>
+	       			<button name ="action_sold"
+	       					states="new,offer_received,offer_acepted,canceled"
+	       					string ="sold"
+	       					type= "object"
+	       					class="oe_highlight"/>
+	       			<button name="action_canceled" 
+	       					 states="new,offer_received,offer_acepted,sold" 
+	       					 string="Cancel" 
+	       					 type="object" 
+	       					 icon="fa-window-close"/>
+	       			<field name ="state" widget="statusbar" statusbar_visible ="new,offer_received,offer_acepted" />
+
+	       		</header>
+	       		<sheet>
+	       			
+	       				<h1><field name='name'/></h1>
+	       				<field name ='tag_ids' nolabel="1" widget="many2many_tags" placeholder="Tags..." options="{'color_field':'color'}"/>
+	       		
+	       			<group>
+	       				<group>
+	       					<field name='property_type_id' options="{'no_create':True}"/>
+	       					<field name='postcode'/>
+	       					<field name='date_availability' string="Available from" optional="hide"/>
+	       				</group>
+	       				<group>
+	       					<field name='expected_price'/>
+	       					<field name='selling_price'/>
+	       				</group>
+	       			</group>
+	       			<notebook>
+	       				<page string='Description'>
+	       					<group>
+	       					<field name='description'/>
+	       					<field name='bedroms'/>
+							<field name='living_area'/>
+	       					<field name='facades'/>
+	       					<field name='garage'/>
+	       					<field name='best_price'/>
+	       					<field name="state"/>
+	       					<field name = "date_deadline"/>
+	       					<field name = "validity"/>
+	       					</group>
+	       				</page>
+	       				<page string = "Garden">
+	       					<group>
+	       						<field name='garden'/>
+	       						<field name='garden_area'/>
+	       						<field name="garden_orientation" attrs="{'invisible':[('garden','=',False)]}"/>
+	       						<field name = "total_area"/>
+	       					</group>
+	       				</page>
+	       				<page string = "Other info">
+	       					<group>
+	       						<field name = "buyer_id"/>
+	       						<field name = "seller_id"/>
+	       					</group>
+	       				</page>
+	       				<page string ="Offers">
+	       						<field name = "offer_ids" nolabel="1"
+	       							attrs="{
+	       							'readonly': [
+	       								('state','in',['sold','canceled']),
+	       								],
+	       						}">
+	       						<tree editable="bottom" 
+	       							default_order="price asc" 
+	       							decoration-danger="status=='refused'"
+	       							decoration-success="status=='accepted'"
+	       							>
+	       							<field name ="price" style="width:10%%"/>
+	       							<field name ="partner_id"/>
+	       							<field name ="status" invisible="1"/>
+	       							<button 
+	       								name="action_accept" 
+	       								string = "Accept" 
+	       								type = "object" 
+	       								icon="fa-check" 
+	       								attrs="{'invisible': [
+	       								('status','!=','False'),
+	       								]}"/>
+	       							<button 
+	       								name="action_refused" 
+	       								string ="Refuse" 
+	       								type = "object" 
+	       								icon="fa-times"
+	       								attrs="{'invisible': [
+	       								('status','!=','False'),
+	       								]}"/>
+	       						</tree>
+	       					</field>
+	       				</page>
+	       			</notebook>
+	       		</sheet>
+	       </form>
 	    </field>
 	</record>
-	<record model='ir.ui.view' id='estate_property_search'> <!--por cada vista es un record-->
-	    <field name='name'>estate_property.search</field> <!--nombre tecnico-->
-	    <field name='model'>estate.property</field>   <!--nombre funcional-->
-	    <field name='arch' type='xml'>   			<!--campo arch de tipo XML definicion de la vista -->
-	        <search> <!--tree vista de arbol, form vista de formulario, search vista de busqueda-->
-	           	<field name="name"/>
-	           	<field name="postcode"/>
-           		<field name="expected_price"/>
-           		<field name="bedroms"/>
-       			<field name="living_area"/>
-       			<field name="facades"/>
-       			<filter name="available" string="Available" domain="[('state','in',['new','offer_received'])]"/>
-       			<!-- para agregar un filtro es necesario poner la etiqueta Filter-->
-       			<filter name="group_by_postcode" string="Postcode" context="{'group_by':'postcode'}"/>
-	        </search>
+	<record model='ir.ui.view' id='estate_property_search'>
+	    <field name='name'>estate_property.search</field>
+	    <field name='model'>estate.property</field>
+	    <field name='arch' type='xml'>
+	        <search string="Tests">
+    			<field name="name"/>
+    			<field name="postcode"/>
+    			<field name='date_availability'/>
+    			<field name='expected_price'/>
+	       		<field name='selling_price'/>
+	       		<field name='description'/>
+				<field name='bedroms'/>
+				<field name='living_area'/>
+				<field name='garden'/>
+				<field name='facades'/>
+				<field name="living_area" string="Living Area greater than"
+           			filter_domain="[('living_area', '&gt;=', self)]"/>
+				<field name='garage'/>
+				<filter name ="avalible" string ="Avalible" domain = "[('state','in' ,['new','offer_received'])]"/>
+				<filter name ="grup_by_postcode" string ="Postcode" context="{'group_by' : 'postcode'}" />
+			</search>
 	    </field>
 	</record>
 	<record id="estate_property_action" model="ir.actions.act_window">
-	    <field name="name">Estate Property Action</field> <!--nombre que tiene la vista al inicio-->
+	    <field name="name">Estate Property action</field>
 	    <field name="res_model">estate.property</field> 
 	    <field name="view_mode">tree,form</field>
+	    <field name="context">{'search_default_name':"Hola",
+	    						'search_default_avalible':1,
+	    						'search_default_grup_by_postcode':1,
+	    						'default_name':"TestName 1",
+	    						'default_postcode':12345}</field>
 	</record>
 	<menuitem id="estate_menu_root" name="Real State"/>
 	<menuitem id="advertisements_menu" name="Advertisements" parent="estate_menu_root"/>

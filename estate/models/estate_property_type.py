@@ -8,9 +8,18 @@ from odoo import fields, models
 class EstatePropertytype(models.Model):
     _name = "estate.property.type"    # nombre tecnico
     _description = "Real State Properties Type"  # nombre Funcional o Comun
+    _order="sequence"
 
     name = fields.Char(
         string="Nombre", 
         required=True,
         default="Unknown",
+    )
+    property_ids = fields.One2many(
+        comodel_name="estate.property",
+        inverse_name="property_type_id",
+        string="Properties",
+        )
+    sequence = fields.Integer(
+        default=10,
     )

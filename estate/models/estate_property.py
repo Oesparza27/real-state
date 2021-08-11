@@ -2,7 +2,8 @@
 # License LGPL-3.0 or later (http:.gnu.org/licenses/lgpt.html)
 
 from odoo import api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import ValidationError, UserError
+from odoo.tools import float_compare
 # se importa fields desde la carpeta odoo fields.py y models.py
 # importar los mensage de error directamente desde la carpeta de Odoo
 
@@ -15,6 +16,7 @@ class EstateProperty(models.Model):
         string="Nombre", 
         required=True,
         default="Unknown",
+	    copy=False,
     )  
     # definir variable name con nombre por default
     description = fields.Text()
@@ -25,7 +27,7 @@ class EstateProperty(models.Model):
             fields.Date.today(), months=+3) 
     )
     expected_price = fields.Float(required=True)
-    Selling_price = fields.Float(
+    selling_price = fields.Float(
         readonly=True,
         copy=False,
     )
@@ -63,6 +65,7 @@ class EstateProperty(models.Model):
     # registros dados de alta
     property_type_id = fields.Many2one(
         comodel_name='estate.property.type',
+        ondelete='restrict',
         )
     # campos relacional por estandar siempre termina en _id
     buyer_id = fields.Many2one(
@@ -82,7 +85,7 @@ class EstateProperty(models.Model):
     # self.env.user son las variables de entorno que tiene el sistema fecha, 
     # usuarios etc.
 
-    #manyto many
+    # manyto many
     tag_ids = fields.Many2many(
         comodel_name='estate.property.tag',
         string="Tags",
@@ -102,9 +105,6 @@ class EstateProperty(models.Model):
         compute='_compute_best_price',
         string='*Best Price',
         )
-
-    # campos calculados inverse, el metodo inverso se calcula cuando se 
-    # guarda el campos en la BD
     date_deadline = fields.Date(
         compute='_compute_date_deadline',
         inverse='_inverse_date_deadline',
@@ -120,7 +120,15 @@ class EstateProperty(models.Model):
     de definir el metodo, el depends se encarga de monitorear los campos que 
     se van a mandar, si hay un cambio siempre se van aa ejectuar cuando hay 
     cambio. hay un api onchange qque lo calcula esn frontend"""
+    _sql_constraints = [
+        ('name_unique', 'unique (name)', "Property Already Exist!"),
+        ('expected_price_positive', 'check(expected_price > 0)', "El precio esperado debe de ser mayo a cero"),
+        ('selling_price_positive', 'check(selling_price > 0)', "El precio de venta debe de ser mayo a cero"),    
+    ]
 
+    # campos calculados inverse, el metodo inverso se calcula cuando se 
+    # guarda el campos en la BD
+   
     # DEBUG Import ipdb; ipdb.set_trace() Y import web_pdb; web_pdb.set_trace()
     # EL CAMPO STORE=TRUE LO ALMACENA EN LA BD 
     # Y CON ESO SE DEBERIA DE TARDAR MENOS
@@ -188,12 +196,24 @@ class EstateProperty(models.Model):
             # para un mensaje en un boton solamente es necesario usar un raise }
             # porque los warning se ejecutan en frontend
 
-    
-
+    # @api.constraint esta se utiliza para meterle contrains a nivel de codigo
+    # para hacer comparacieones de floats usar float_comprare() float_is_zero()
+    # cuando se comp
+    @api.constrains('selling_price', 'expected_price')
+    def _check_selling_price(self):
+        for rec in self:
+            expected_price = rec.expected_price*0.90
+            # import ipdb; ipdb.set_trace()
+            if float_compare(
+                    rec.selling_price, expected_price, precision_digits=2
+                    ) == -1:
+                raise UserError('El precio de venta no debe ser menor al 90%% '
+                      'del precio esperado')
 
 class EstatePropertyOffer(models.Model):
     _name = "estate.property.offer"    # nombre tecnico
     _description = "Real Estate Property Offer"  # nombre FUncional o Comun
+    _order = "price desc"
 
     price = fields.Float()
     status = fields.Selection(
@@ -201,6 +221,7 @@ class EstatePropertyOffer(models.Model):
             ('accepted', 'Accepted'),
             ('refused', 'Refused'),        
         ],
+        copy=False,
     )
     partner_id = fields.Many2one(
         comodel_name='res.partner',
@@ -209,15 +230,19 @@ class EstatePropertyOffer(models.Model):
     property_id = fields.Many2one(
         comodel_name='estate.property',
         required=True,
+        ondelete='cascade',
     )
+    _sql_constraints = [
+        ('price_positive', 'check(price > 0)', "Price Must be Positive!"),
+    ]
 
     def action_accept(self):
         for rec in self:
-            if any([x == 'accepted' for x in rec.property_id.offer_ids.mapped('status')]):
-                raise UserError('Solo puedes aceptar una oferta')
+            """if any([x == 'accepted' for x in rec.property_id.offer_ids.mapped('status')]):
+                raise UserError('Solo puedes aceptar una oferta')"""
             rec.property_id.write({
                 'buyer_id': rec.partner_id.id,
-                'Selling_price': rec.price,
+                'selling_price': rec.price,
                 })      
             rec.status = 'accepted'
 

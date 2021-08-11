@@ -14,3 +14,7 @@ class EstatePropertyTag(models.Model):
         required=True,
         default="Unknown",
     )  
+    _sql_constraints =[
+        ('name_unique', 'unique (name)', "Property Already Exist!"),
+    ]
+    color = fields.Integer()
