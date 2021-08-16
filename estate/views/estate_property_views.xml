@@ -100,6 +100,7 @@
 	       							<field name ="price" style="width:10%%"/>
 	       							<field name ="partner_id"/>
 	       							<field name ="status" invisible="1"/>
+	       							<field name="property_type_id"/>
 	       							<button 
 	       								name="action_accept" 
 	       								string = "Accept" 
@@ -146,6 +147,24 @@
 				<filter name ="grup_by_postcode" string ="Postcode" context="{'group_by' : 'postcode'}" />
 			</search>
 	    </field>
+	</record>
+	<record model="ir.ui.view" id="estate_property_offer_tree">
+	    <field name="name">estate_property_offer.tree</field>
+	    <field name="model">estate.property.offer</field> 
+	    <field name="arch" type="xml">
+	    		<tree>
+	    			<field name="partner_id"/>
+	    			<field name="property_id"/>
+	    			<field name="price"/>
+	    			<field name="status"/>
+	    		</tree>
+		</field>
+	</record>
+	<record id="action_estate_property_offer" model="ir.actions.act_window">
+	    <field name="name">Offers</field>
+	    <field name="res_model">estate.property.offer</field> 
+	    <field name="view_mode">tree</field>
+	    <field name="domain">[('property_type_id','=', active_id)]</field>
 	</record>
 	<record id="estate_property_action" model="ir.actions.act_window">
 	    <field name="name">Estate Property action</field>

@@ -236,6 +236,10 @@ class EstatePropertyOffer(models.Model):
         ('price_positive', 'check(price > 0)', "Price Must be Positive!"),
     ]
 
+    property_type_id = fields.Many2one(
+        related='property_id.property_type_id',
+        )
+
     def action_accept(self):
         for rec in self:
             """if any([x == 'accepted' for x in rec.property_id.offer_ids.mapped('status')]):

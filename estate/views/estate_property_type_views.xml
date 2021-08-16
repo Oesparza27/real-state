@@ -16,6 +16,17 @@
 	    <field name='arch' type='xml'>   
 		    <form>
 		    	<sheet>
+		    		<div class="oe_button_box" name="button_box">
+		    			<button 
+			    			name="%(action_estate_property_offer)d"
+			    			type="action"
+			    			icon="fa-home"
+			    			class="oe_stat_button">
+			    		<field name="offer_count" widget="statinfo" string="Offers"/>
+			    		<field name="offer_ids" invisible="True"/>
+			    		</button>
+		    		</div>
+
 		    		<h1>
 		    			<field name="name"/>
 		    		</h1>
