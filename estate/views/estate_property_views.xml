@@ -4,7 +4,7 @@
 	    <field name='name'>estate_property.tree</field>
 	    <field name='model'>estate.property</field>
 	    <field name='arch' type='xml'>
-	        <tree string='description'>
+	        <tree>
 	            <field name='name' string = 'Title' />
 	            <field name='postcode' string = 'Postcode'/>
 	            <field name='bedroms' string = 'Bedroms'/>
@@ -105,18 +105,16 @@
 	       								name="action_accept" 
 	       								string = "Accept" 
 	       								type = "object" 
-	       								icon="fa-check" 
-	       								attrs="{'invisible': [
-	       								('status','!=','False'),
-	       								]}"/>
+	       								icon="fa-check"/>
+	       								
 	       							<button 
 	       								name="action_refused" 
 	       								string ="Refuse" 
 	       								type = "object" 
-	       								icon="fa-times"
-	       								attrs="{'invisible': [
+	       								icon="fa-times"/>
+	       								<!-- attrs="{'invisible': [
 	       								('status','!=','False'),
-	       								]}"/>
+	       								]}"/> -->
 	       						</tree>
 	       					</field>
 	       				</page>

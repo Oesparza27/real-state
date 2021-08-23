@@ -113,6 +113,20 @@ class EstateProperty(models.Model):
         default=7,
     )  
 
+    def unlink(self):
+        for rec in self:
+            if rec.state not in ['new', 'calceled']:
+                raise UserError('YOu can no delete this property')
+        return super().unlink()
+
+
+
+    # @api.model_create_multi
+    # def create(self, vals_list):
+    #     for vals in vals_list:
+    #         return super().create(vals_list)
+                
+    #     return super().create(vals_list)
     """metodo que empieza con guion bajo es un metodo privado, que nos e puede 
     ejecutar desde el frontend.
     este es un decorador @es un 
@@ -204,10 +218,11 @@ class EstateProperty(models.Model):
         for rec in self:
             expected_price = rec.expected_price*0.90
             # import ipdb; ipdb.set_trace()
-            if float_compare(
+
+            if rec.selling_price and float_compare(
                     rec.selling_price, expected_price, precision_digits=2
                     ) == -1:
-                raise UserError('El precio de venta no debe ser menor al 90%% '
+                raise UserError('El precio de venta no debe ser menor al 90%%'
                       'del precio esperado')
 
 class EstatePropertyOffer(models.Model):
@@ -253,3 +268,16 @@ class EstatePropertyOffer(models.Model):
     def action_refused(self):
         for rec in self:
             rec.status = 'refused'
+                
+    @api.model
+    def create (self, vals):
+        # import ipdb; ipdb.set_trace()
+        estate_property = self.env['estate.property'].browse(vals.get('property_id'))
+        max_offer = 0
+        prices = estate_property.offer_ids.mapped('price')
+        if prices:
+            max_offer = max(prices)
+        if vals.get('price') < max_offer:
+            raise UserError('You can not accepted an offer that is lower than existings ones')
+        estate_property.state = 'offer_received'
+        return super().create(vals)

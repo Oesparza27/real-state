@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<record model='ir.ui.view' id='res_users_form'>
+	    <field name='name'>res_users.form</field>
+	    <field name='model'>res.users</field>
+	    <field name="inherit_id" ref="base.view_users_form"/>
+	    <field name="arch" type="xml">
+	    	<xpath expr="//page[@name='access_rights']" position="after">
+	    		<page name="properties" string="Assigned Properties">
+	    			<field name="property_ids" nolabel="1"/>
+	    		</page>
+	    	</xpath>
+	    </field>
+	</record>
+	<record model='ir.ui.view' id='res_users_tree'>
+	    <field name='name'>res_users.tree</field>
+	    <field name='model'>res.users</field>
+	    <field name="inherit_id" ref="base.view_users_tree"/>
+	    <field name='arch' type='xml'>
+	       <xpath expr="//field[@name='company_id']" position="after">
+	       		<field name="property_ids" widget="many2many_tags"/>
+	       </xpath>
+	    </field>
+	</record>
+</odoo>
